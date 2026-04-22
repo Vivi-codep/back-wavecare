@@ -25,13 +25,17 @@ login(
   }
 
   @Put(':id')
-  update(
-    @Param('id') id: string,
-    @Body() body: { name?: string; email?: string },
-  ) {
-    return this.userService.update(Number(id), body);
-  }
-
+update(
+  @Param('id') id: string,
+  @Body() body: {
+    name?: string;
+    email?: string;
+    telefone?: string;
+    cidade?: string;
+  },
+) {
+  return this.userService.update(Number(id), body);
+}
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(Number(id));

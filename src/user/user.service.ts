@@ -10,8 +10,13 @@ import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
-
-  async create(data: { name: string; email: string; password: string }) {
+async create(data: { 
+  name: string; 
+  email: string; 
+  password: string;
+  telefone?: string;
+  cidade?: string;
+}) {
   if (!data.name || !data.email || !data.password) {
     throw new BadRequestException('Dados inválidos');
   }
@@ -40,12 +45,17 @@ export class UserService {
     return this.prisma.user.findMany();
   }
 
-  update(id: number, data: { name?: string; email?: string }) {
-    return this.prisma.user.update({
-      where: { id },
-      data,
-    });
-  }
+ update(id: number, data: {
+  name?: string;
+  email?: string;
+  telefone?: string;
+  cidade?: string;
+}) {
+  return this.prisma.user.update({
+    where: { id },
+    data,
+  });
+}
 
   remove(id: number) {
     return this.prisma.user.delete({
