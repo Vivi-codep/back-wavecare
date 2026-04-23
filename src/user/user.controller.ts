@@ -1,23 +1,32 @@
-import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  ParseIntPipe,
+} from '@nestjs/common';
+
 import { UserService } from './user.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
 
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
 
   @Post('register')
-create(
-  @Body() body: { name: string; email: string; password: string },
-) {
-  return this.userService.create(body);
-}
+  create(@Body() body: CreateUserDto) {
+    return this.userService.create(body);
+  }
 
-@Post('login')
-login(
-  @Body() body: { email: string; password: string },
-) {
-  return this.userService.login(body);
-}
+  @Post('login')
+  login(@Body() body: LoginUserDto) {
+    return this.userService.login(body);
+  }
 
   @Get()
   findAll() {
@@ -25,19 +34,15 @@ login(
   }
 
   @Put(':id')
-update(
-  @Param('id') id: string,
-  @Body() body: {
-    name?: string;
-    email?: string;
-    telefone?: string;
-    cidade?: string;
-  },
-) {
-  return this.userService.update(Number(id), body);
-}
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateUserDto,
+  ) {
+    return this.userService.update(id, body);
+  }
+
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(Number(id));
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.userService.remove(id);
   }
 }
