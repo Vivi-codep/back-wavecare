@@ -7,19 +7,20 @@ import { join } from 'path';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  // 👇 servir uploads
+  //  servir uploads
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
     prefix: '/uploads/',
   });
 
-  // 👇 CORS
+  //  CORS 
   app.enableCors({
-    origin: '*',
+    origin: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
-  // 👇 validação DTO
+  //  validação DTO
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
