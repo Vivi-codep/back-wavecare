@@ -4,7 +4,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Prisma } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import * as bcrypt from 'bcrypt';
 
 import { CreateUserDto } from './dto/create-user.dto';
@@ -42,10 +42,7 @@ export class UserService {
 
       return user;
     } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2002'
-      ) {
+      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2002') {
         throw new BadRequestException('Email já cadastrado');
       }
 
@@ -93,7 +90,7 @@ export class UserService {
     };
   }
 
-    async login(data: { email: string; password: string }) {
+  async login(data: { email: string; password: string }) {
     const user = await this.prisma.user.findUnique({
       where: { email: data.email },
     });
@@ -102,10 +99,7 @@ export class UserService {
       throw new UnauthorizedException('Email ou senha inválidos');
     }
 
-    const passwordMatch = await bcrypt.compare(
-      data.password,
-      user.password,
-    );
+    const passwordMatch = await bcrypt.compare(data.password, user.password);
 
     if (!passwordMatch) {
       throw new UnauthorizedException('Email ou senha inválidos');
@@ -122,6 +116,5 @@ export class UserService {
       },
       access_token,
     };
-  } 
-
-} 
+  }
+}
