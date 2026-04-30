@@ -1,13 +1,9 @@
-import { IsEmail, IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class UpdateUserDto {
   @IsOptional()
   @IsString()
   name?: string;
-
-  @IsOptional()
-  @IsEmail()
-  email?: string;
 
   @IsOptional()
   @IsString()
@@ -16,4 +12,8 @@ export class UpdateUserDto {
   @IsOptional()
   @IsString()
   cidade?: string;
+
+  @IsOptional()
+  @IsString()
+  foto?: string; 
 }

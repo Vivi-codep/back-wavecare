@@ -6,6 +6,8 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import * as bcrypt from 'bcrypt';
+import * as fs from 'fs';
+import * as path from 'path';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -26,7 +28,7 @@ export class UserService {
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
     try {
-      const user = await this.prisma.user.create({
+      return await this.prisma.user.create({
         data: {
           ...data,
           password: hashedPassword,
@@ -39,10 +41,11 @@ export class UserService {
           cidade: true,
         },
       });
-
-      return user;
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2002') {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
         throw new BadRequestException('Email já cadastrado');
       }
 
@@ -90,6 +93,41 @@ export class UserService {
     };
   }
 
+  // 🔥 AGORA NO LUGAR CERTO
+  async deleteFoto(id: number) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!user || !user.foto) {
+      throw new BadRequestException('Usuário não tem foto');
+    }
+
+    const filePath = path.join(
+      __dirname,
+      '..',
+      '..',
+      user.foto,
+    );
+
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+
+    return this.prisma.user.update({
+      where: { id },
+      data: {
+        foto: null,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        foto: true,
+      },
+    });
+  }
+
   async login(data: { email: string; password: string }) {
     const user = await this.prisma.user.findUnique({
       where: { email: data.email },
@@ -99,7 +137,10 @@ export class UserService {
       throw new UnauthorizedException('Email ou senha inválidos');
     }
 
-    const passwordMatch = await bcrypt.compare(data.password, user.password);
+    const passwordMatch = await bcrypt.compare(
+      data.password,
+      user.password,
+    );
 
     if (!passwordMatch) {
       throw new UnauthorizedException('Email ou senha inválidos');
