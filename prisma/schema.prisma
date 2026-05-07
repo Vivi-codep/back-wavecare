@@ -17,3 +17,13 @@ model User {
   foto      String? 
   role String @default("user")
 }
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  price       Float
+  image       String?
+  stock       Int
+  createdAt   DateTime @default(now())
+}
