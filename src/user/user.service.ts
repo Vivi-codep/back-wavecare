@@ -20,6 +20,7 @@ export class UserService {
     private authService: AuthService,
   ) {}
 
+  // 🔹 CADASTRO
   async create(data: CreateUserDto) {
     if (!data.name || !data.email || !data.password) {
       throw new BadRequestException('Dados inválidos');
@@ -39,6 +40,8 @@ export class UserService {
           email: true,
           telefone: true,
           cidade: true,
+          foto: true,
+          role: true,
         },
       });
     } catch (error) {
@@ -53,6 +56,7 @@ export class UserService {
     }
   }
 
+  // 🔹 LISTAR USUÁRIOS
   findAll() {
     return this.prisma.user.findMany({
       select: {
@@ -61,10 +65,13 @@ export class UserService {
         email: true,
         telefone: true,
         cidade: true,
+        foto: true,
+        role: true,
       },
     });
   }
 
+  // 🔹 ATUALIZAR USUÁRIO
   async update(id: number, data: UpdateUserDto) {
     return this.prisma.user.update({
       where: { id },
@@ -75,10 +82,13 @@ export class UserService {
         email: true,
         telefone: true,
         cidade: true,
+        foto: true,
+        role: true,
       },
     });
   }
 
+  // 🔹 DELETAR USUÁRIO
   async remove(id: number) {
     const user = await this.prisma.user.delete({
       where: { id },
@@ -90,10 +100,12 @@ export class UserService {
       email: user.email,
       telefone: user.telefone,
       cidade: user.cidade,
+      foto: user.foto,
+      role: user.role,
     };
   }
 
-  // 🔥 AGORA NO LUGAR CERTO
+  // 🔹 DELETAR FOTO
   async deleteFoto(id: number) {
     const user = await this.prisma.user.findUnique({
       where: { id },
@@ -124,10 +136,12 @@ export class UserService {
         name: true,
         email: true,
         foto: true,
+        role: true,
       },
     });
   }
 
+  // 🔹 LOGIN
   async login(data: { email: string; password: string }) {
     const user = await this.prisma.user.findUnique({
       where: { email: data.email },
@@ -154,6 +168,8 @@ export class UserService {
         id: user.id,
         name: user.name,
         email: user.email,
+        foto: user.foto,
+        role: user.role,
       },
       access_token,
     };

@@ -15,4 +15,5 @@ model User {
   telefone  String?
   cidade    String?
   foto      String? 
+  role String @default("user")
 }

@@ -18,6 +18,10 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { AdminGuard } from '../auth/guards/admin.guard';
+
 
 @Controller('users')
 export class UserController {
@@ -36,11 +40,11 @@ export class UserController {
   }
 
   // LISTAR USUÁRIOS
-  @Get()
-  findAll() {
-    return this.userService.findAll();
-  }
-
+@UseGuards(JwtAuthGuard, AdminGuard)
+@Get()
+findAll() {
+  return this.userService.findAll();
+}
   // ATUALIZAR USUÁRIO
   @Put(':id')
   update(
