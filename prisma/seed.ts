@@ -41,7 +41,7 @@ async function main() {
         description:
           'Forma um filme protetor invisível contra raios UV, calor excessivo, mantendo definição do cabelo.  ',
         price: 49.90 ,
-        image: '/products/ver ao-produtos/verão-creme.png ',
+        image: '/products/verao-produtos/verão-creme.png ',
         stock: 100,
         season: 'verao',
         category: 'produto',
@@ -52,7 +52,7 @@ async function main() {
         description:
           'Definição duradoura com efeito natural e toque leve',
         price: 46.90,
-        image: '/products/ver ao-produtos/verão-gelatina. png  ',
+        image: '/products/verao-produtos/verão-gelatina. png  ',
         stock: 100,
         season: 'verao',
         category: 'produto',
@@ -63,7 +63,7 @@ async function main() {
         description:
           'Óleo nutritivo leve com brilho instantâneo. Controla o frizz, sela pontas e realça os cachos.',
         price: 44.90 ,
-        image: '/products/ver ao-produtos/verão-oleo.png ',
+        image: '/products/verao-produtos/verão-oleo.png ',
         stock: 100,
         season: 'verao',
         category: 'produto',
@@ -76,7 +76,7 @@ async function main() {
         description:
           'O combo ideal para manter os fios protegidos, hidratados e luminosos durante o verão. ',
         price:129.90 ,
-        image: '/products/ver ao-produtos/verão-kit-1.png ',
+        image: '/products/verao-produtos/verão-kit-1.png ',
         stock: 100,
         season: 'verao',
         category: 'kit',
@@ -87,7 +87,7 @@ async function main() {
         description:
           'Tratamento completo com proteção térmica e solar. Além da limpeza e hidratação profunda.   ',
         price:189.90 ,
-        image: '/products/ver ao-produtos/verão-kit-2.png  ',
+        image: '/products/verao-produtos/verão-kit-2.png  ',
         stock: 100,
         season: 'verao',
         category: 'kit',
@@ -98,7 +98,7 @@ async function main() {
         description:
           'A dupla perfeita para definição duradoura e controle do frizz no verão.  ',
         price:89.90 ,
-        image: '/products/ver ao-produtos/verão-kit-3.png',
+        image: '/products/verao-produtos/verão-kit-3.png',
         stock: 100,
         season: 'verao',
         category: 'kit',
@@ -109,7 +109,7 @@ async function main() {
         description:
           'O trio indispensável para finalizar os fios durante o verão.  ',
         price:109.90 ,
-        image: '/products/ver ao-produtos/verão-kit-4.png ',
+        image: '/products/verao-produtos/verão-kit-4.png ',
         stock: 100,
         season: 'verao',
         category: 'kit',
@@ -121,7 +121,7 @@ async function main() {
         description:
           'A combinação ideal para modelar e nutrir os fios no verão.  ',
         price:74.90  ,
-        image: '/products/ver ao-produtos/verão-kit-5.png  ',
+        image: '/products/verao-produtos/verão-kit-5.png  ',
         stock: 100,
         season: 'verao',
         category: 'kit',
@@ -132,7 +132,7 @@ async function main() {
         description:
           'A experiência completa de cuidado para o verão. ',
         price:249.90   ,
-        image: '/products/ver ao-produtos/verão-kit-completo.png ',
+        image: '/products/verao-produtos/verão-kit-completo.png ',
         stock: 100,
         season: 'verao',
         category: 'kit',
