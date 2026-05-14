@@ -3,13 +3,14 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
+  await prisma.product.deleteMany(); // limpa produtos antigos antes de reinserir
+
   await prisma.product.createMany({
     data: [
       // ===== VERÃO | PRODUTOS =====
       {
         name: 'SunShield Shampoo',
-        description:
-          'Limpeza suave com proteção UV para cabelos expostos ao sol e maresia.',
+        description: 'Limpeza suave com proteção UV para cabelos expostos ao sol e maresia.',
         price: 39.90,
         image: '/products/verao-produtos/verao-shampoo.png',
         stock: 100,
@@ -18,9 +19,8 @@ async function main() {
       },
       {
         name: 'SunShield Conditioner',
-        description:
-          'Restaura a hidratação dos fios após exposição solar, devolvendo maciez.',
-        price: 42.8,
+        description: 'Restaura a hidratação dos fios após exposição solar, devolvendo maciez.',
+        price: 42.80,
         image: '/products/verao-produtos/verao-condicionador.png',
         stock: 100,
         season: 'verao',
@@ -28,542 +28,429 @@ async function main() {
       },
       {
         name: 'Summer Repair Mask',
-        description:
-          'Tratamento intensivo de alta performance para recuperar fios danificados pelo sol e maresia.',
-        price: 54.9,
+        description: 'Tratamento intensivo de alta performance para recuperar fios danificados pelo sol e maresia.',
+        price: 54.90,
         image: '/products/verao-produtos/verao-mascara.png',
         stock: 100,
         season: 'verao',
         category: 'produto',
       },
-{
-        name: 'Heat & Sun Leave-In ',
-        description:
-          'Forma um filme protetor invisível contra raios UV, calor excessivo, mantendo definição do cabelo.  ',
-        price: 49.90 ,
-        image: '/products/verao-produtos/verão-creme.png ',
+      {
+        name: 'Heat & Sun Leave-In',
+        description: 'Forma um filme protetor invisível contra raios UV, calor excessivo, mantendo definição do cabelo.',
+        price: 49.90,
+        image: '/products/verao-produtos/verao-creme.png',
         stock: 100,
         season: 'verao',
         category: 'produto',
       },
-
       {
-        name: 'Summer Definition Jelly  ',
-        description:
-          'Definição duradoura com efeito natural e toque leve',
+        name: 'Summer Definition Jelly',
+        description: 'Definição duradoura com efeito natural e toque leve.',
         price: 46.90,
-        image: '/products/verao-produtos/verão-gelatina. png  ',
+        image: '/products/verao-produtos/verao-gelatina.png',
         stock: 100,
         season: 'verao',
         category: 'produto',
       },
-
       {
-        name: 'Golden Shine Oil  ',
-        description:
-          'Óleo nutritivo leve com brilho instantâneo. Controla o frizz, sela pontas e realça os cachos.',
-        price: 44.90 ,
-        image: '/products/verao-produtos/verão-oleo.png ',
+        name: 'Golden Shine Oil',
+        description: 'Óleo nutritivo leve com brilho instantâneo. Controla o frizz, sela pontas e realça os cachos.',
+        price: 44.90,
+        image: '/products/verao-produtos/verao-oleo.png',
         stock: 100,
         season: 'verao',
         category: 'produto',
       },
-
-       // ===== VERÃO | KITS =====
-
-{
+      // ===== VERÃO | KITS =====
+      {
         name: 'Summer Essential Kit',
-        description:
-          'O combo ideal para manter os fios protegidos, hidratados e luminosos durante o verão. ',
-        price:129.90 ,
-        image: '/products/verao-produtos/verão-kit-1.png ',
+        description: 'O combo ideal para manter os fios protegidos, hidratados e luminosos durante o verão.',
+        price: 129.90,
+        image: '/products/verao-produtos/verao-kit-1.png',
         stock: 100,
         season: 'verao',
         category: 'kit',
       },
-
       {
-        name: 'Summer Full Protection ',
-        description:
-          'Tratamento completo com proteção térmica e solar. Além da limpeza e hidratação profunda.   ',
-        price:189.90 ,
-        image: '/products/verao-produtos/verão-kit-2.png  ',
+        name: 'Summer Full Protection',
+        description: 'Tratamento completo com proteção térmica e solar. Além da limpeza e hidratação profunda.',
+        price: 189.90,
+        image: '/products/verao-produtos/verao-kit-2.png',
         stock: 100,
         season: 'verao',
         category: 'kit',
       },
-
       {
-        name: 'Summer Definition Duo ',
-        description:
-          'A dupla perfeita para definição duradoura e controle do frizz no verão.  ',
-        price:89.90 ,
-        image: '/products/verao-produtos/verão-kit-3.png',
+        name: 'Summer Definition Duo',
+        description: 'A dupla perfeita para definição duradoura e controle do frizz no verão.',
+        price: 89.90,
+        image: '/products/verao-produtos/verao-kit-3.png',
         stock: 100,
         season: 'verao',
         category: 'kit',
       },
-
-       {
+      {
         name: 'Summer Finishing Trio',
-        description:
-          'O trio indispensável para finalizar os fios durante o verão.  ',
-        price:109.90 ,
-        image: '/products/verao-produtos/verão-kit-4.png ',
+        description: 'O trio indispensável para finalizar os fios durante o verão.',
+        price: 109.90,
+        image: '/products/verao-produtos/verao-kit-4.png',
         stock: 100,
         season: 'verao',
         category: 'kit',
       },
-
-
-       {
-        name: 'Summer Styling Duo ',
-        description:
-          'A combinação ideal para modelar e nutrir os fios no verão.  ',
-        price:74.90  ,
-        image: '/products/verao-produtos/verão-kit-5.png  ',
+      {
+        name: 'Summer Styling Duo',
+        description: 'A combinação ideal para modelar e nutrir os fios no verão.',
+        price: 74.90,
+        image: '/products/verao-produtos/verao-kit-5.png',
         stock: 100,
         season: 'verao',
         category: 'kit',
       },
-
-       {
-        name: 'Summer Total Protection ',
-        description:
-          'A experiência completa de cuidado para o verão. ',
-        price:249.90   ,
-        image: '/products/verao-produtos/verão-kit-completo.png ',
+      {
+        name: 'Summer Total Protection',
+        description: 'A experiência completa de cuidado para o verão.',
+        price: 249.90,
+        image: '/products/verao-produtos/verao-kit-completo.png',
         stock: 100,
         season: 'verao',
         category: 'kit',
       },
-    
-       // ===== OUTONO | PRODUTOS =====
-
- {
-        name: 'Autumn Nourish Shampoo ',
-        description:
-          'Limpeza suave com nutrição profunda para cabelos ressecados pela mudança de estação.  ',
-        price:39.90   ,
-        image: '/products/outono-produtos/outono-shampoo.png ',
+      // ===== OUTONO | PRODUTOS =====
+      {
+        name: 'Autumn Nourish Shampoo',
+        description: 'Limpeza suave com nutrição profunda para cabelos ressecados pela mudança de estação.',
+        price: 39.90,
+        image: '/products/outono-produtos/outono-shampoo.png',
         stock: 100,
         season: 'outono',
         category: 'produto',
       },
-
       {
-        name: 'Autumn Nourish Conditioner  ',
-        description:
-          'Restaura a hidratação dos fios após exposição ao frio e ao vento, devolvendo maciez.  ',
-        price:42.80   ,
-        image: '/products/outono-produtos/outono-condicionador.png   ',
+        name: 'Autumn Nourish Conditioner',
+        description: 'Restaura a hidratação dos fios após exposição ao frio e ao vento, devolvendo maciez.',
+        price: 42.80,
+        image: '/products/outono-produtos/outono-condicionador.png',
         stock: 100,
         season: 'outono',
         category: 'produto',
       },
-
       {
-        name: 'Autumn Repair Mask  ',
-        description:
-          'Tratamento intensivo para recuperar fios danificados e ressecados pela queda de temperatura.  ',
-        price:54.90   ,
+        name: 'Autumn Repair Mask',
+        description: 'Tratamento intensivo para recuperar fios danificados e ressecados pela queda de temperatura.',
+        price: 54.90,
         image: '/products/outono-produtos/outono-mascara.png',
         stock: 100,
         season: 'outono',
         category: 'produto',
       },
-
-            {
-        name: 'Autumn Leave-In Cream   ',
-        description:
-          'Forma uma barreira protetora contra o ressecament o, mantendo a definição e o brilho dos fios.  ',
-        price:54.90   ,
-        image: '/products/outono-produtos/outono-creme.png ',
+      {
+        name: 'Autumn Leave-In Cream',
+        description: 'Forma uma barreira protetora contra o ressecamento, mantendo a definição e o brilho dos fios.',
+        price: 54.90,
+        image: '/products/outono-produtos/outono-creme.png',
         stock: 100,
         season: 'outono',
         category: 'produto',
       },
-
-          {
-        name: 'Autumn Curl Styling Jelly    ',
-        description:
-          'Definição duradoura com efeito natural e toque leve para os dias de outono.  ',
-        price:46.90   ,
-        image: '/products/outono-produtos/outono-gelatina.png ',
+      {
+        name: 'Autumn Curl Styling Jelly',
+        description: 'Definição duradoura com efeito natural e toque leve para os dias de outono.',
+        price: 46.90,
+        image: '/products/outono-produtos/outono-gelatina.png',
         stock: 100,
         season: 'outono',
         category: 'produto',
       },
-
-        {
+      {
         name: 'Autumn Shine Hair Oil',
-        description:
-          'Óleo nutritivo com brilho âmbar instantâneo. Controla o frizz, sela pontas e realça os cachos.',
-        price:34.90    ,
+        description: 'Óleo nutritivo com brilho âmbar instantâneo. Controla o frizz, sela pontas e realça os cachos.',
+        price: 34.90,
         image: '/products/outono-produtos/outono-oleo.png',
         stock: 100,
         season: 'outono',
         category: 'produto',
       },
-
-         // ===== OUTONO | KITS =====
- {
-        name: 'Autumn Essential Care Kit ',
-        description:
-          'O combo ideal para manter os fios protegidos, hidratados e luminosos durante o outono. ',
-        price:119.90     ,
-        image: '/products/outono-produtos/autumn-kit-1.png ',
+      // ===== OUTONO | KITS =====
+      {
+        name: 'Autumn Essential Care Kit',
+        description: 'O combo ideal para manter os fios protegidos, hidratados e luminosos durante o outono.',
+        price: 119.90,
+        image: '/products/outono-produtos/Autumn-kit-1.png',
         stock: 100,
         season: 'outono',
         category: 'kit',
       },
-
       {
         name: 'Autumn Full Nutrition',
-        description:
-          'Tratamento completo com nutrição profunda e proteção contra o frio e a secura da estação.  ',
-        price:159.90 ,
-        image: '/products/outono-produtos/autumn-kit-2.png  ',
+        description: 'Tratamento completo com nutrição profunda e proteção contra o frio e a secura da estação.',
+        price: 159.90,
+        image: '/products/outono-produtos/Autumn-kit-2.png',
         stock: 100,
         season: 'outono',
         category: 'kit',
       },
-
       {
-        name: 'Autumn Definition Duo ',
-        description:
-          'A dupla perfeita para definição duradoura e controle do frizz no outono.',
-        price:89.90  ,
-        image: '/products/outono-produtos/autumn-kit-3.png  ',
+        name: 'Autumn Definition Duo',
+        description: 'A dupla perfeita para definição duradoura e controle do frizz no outono.',
+        price: 89.90,
+        image: '/products/outono-produtos/Autumn-kit-3.png',
         stock: 100,
         season: 'outono',
         category: 'kit',
       },
-
-       {
+      {
         name: 'Autumn Finishing Trio',
-        description:
-          'O trio indispensável para finalizar os fios durante o outono.',
-        price:109.90  ,
-        image: '/products/outono-produtos/autumn-kit-4.png',
+        description: 'O trio indispensável para finalizar os fios durante o outono.',
+        price: 109.90,
+        image: '/products/outono-produtos/Autumn-kit-4.png',
         stock: 100,
         season: 'outono',
         category: 'kit',
       },
-
-       {
-        name: 'Autumn Styling Duo ',
-        description:
-          'A combinação ideal para modelar e nutrir os fios no outono. ',
-        price:74.90  ,
-        image: '/products/outono-produtos/autumn-kit-5.png ',
-        stock: 100,
-        season: 'outono',
-        category: 'kit',
-      },
-
-       {
-        name: 'Autumn Total Nutrition  ',
-        description:
-          'A experiência completa de cuidado e nutrição para o outono. ',
-        price:249.90  ,
-        image: '/products/outono-produtos/autumn-kit-completo.png',
-        stock: 100,
-        season: 'outono',
-        category: 'kit',
-      },
-
-       // ===== INVERNO | PRODUTOS =====
- {
-        name: 'Winter Deep Hydration Shampoo  ',
-        description:
-          'Limpeza suave com nutrição intensiva para cabelos ressecados pelo frio e ar seco. ',
-        price:46.90   ,
-        image: '/products/inverno-produtos/inverno-shampoo.png ',
-        stock: 100,
-        season: 'inverno',
-        category: 'produto',
-      },
-
       {
-        name: 'Winter Soft Repair Conditioner  ',
-        description:
-          'Restaura a maciez e hidratação dos fios após exposição ao frio, vento e aquecedores.  ',
-        price:48.90    ,
-        image: '/products/inverno-produtos/inverno-con dicionador.png ',
+        name: 'Autumn Styling Duo',
+        description: 'A combinação ideal para modelar e nutrir os fios no outono.',
+        price: 74.90,
+        image: '/products/outono-produtos/Autumn-kit-5.png',
+        stock: 100,
+        season: 'outono',
+        category: 'kit',
+      },
+      {
+        name: 'Autumn Total Nutrition',
+        description: 'A experiência completa de cuidado e nutrição para o outono.',
+        price: 249.90,
+        image: '/products/outono-produtos/Autumn-kit-completo.png',
+        stock: 100,
+        season: 'outono',
+        category: 'kit',
+      },
+      // ===== INVERNO | PRODUTOS =====
+      {
+        name: 'Winter Deep Hydration Shampoo',
+        description: 'Limpeza suave com nutrição intensiva para cabelos ressecados pelo frio e ar seco.',
+        price: 46.90,
+        image: '/products/inverno-produtos/inverno-shampoo.png',
         stock: 100,
         season: 'inverno',
         category: 'produto',
       },
-
-       {
-        name: 'Winter Intense Repair Mask  ',
-        description:
-          'Tratamento intensivo para recuperar fios danificados e ressecados pelo inverno rigoroso.',
-        price:56.90     ,
-        image: '/products/inverno-produtos/inverno-mascara.png ',
+      {
+        name: 'Winter Soft Repair Conditioner',
+        description: 'Restaura a maciez e hidratação dos fios após exposição ao frio, vento e aquecedores.',
+        price: 48.90,
+        image: '/products/inverno-produtos/inverno-condicionador.png',
         stock: 100,
         season: 'inverno',
         category: 'produto',
       },
-
-       {
-        name: 'Winter Protective Leave-in Cream',
-        description:
-          'Cria um escudo protetor contra o frio e o vento, mantendo a hidratação e a definição dos fios.',
-        price:42.90     ,
-        image: '/products/inverno-produtos/inverno-creme.png  ',
+      {
+        name: 'Winter Intense Repair Mask',
+        description: 'Tratamento intensivo para recuperar fios danificados e ressecados pelo inverno rigoroso.',
+        price: 56.90,
+        image: '/products/inverno-produtos/inverno-mascara.png',
         stock: 100,
         season: 'inverno',
         category: 'produto',
       },
-
-       {
-        name: 'Winter Curl Definition Gelatin ',
-        description:
-          'Definição duradoura com proteção térmica e efeito antifrizz para os dias mais frios. ',
-        price:58.90     ,
+      {
+        name: 'Winter Protective Leave-In Cream',
+        description: 'Cria um escudo protetor contra o frio e o vento, mantendo a hidratação e a definição dos fios.',
+        price: 42.90,
+        image: '/products/inverno-produtos/inverno-creme.png',
+        stock: 100,
+        season: 'inverno',
+        category: 'produto',
+      },
+      {
+        name: 'Winter Curl Definition Gelatin',
+        description: 'Definição duradoura com proteção térmica e efeito antifrizz para os dias mais frios.',
+        price: 58.90,
         image: '/products/inverno-produtos/inverno-gelatina.png',
         stock: 100,
         season: 'inverno',
         category: 'produto',
       },
-
       {
         name: 'Winter Frost Shine Oil',
-        description:
-          'Óleo nutritivo com aquecimento capilar e brilho instantâneo. Sela cutículas e protege do frio.  ',
-        price:44.90     ,
-        image: '/products/inv erno-produto s/inverno-ole o.png ',
+        description: 'Óleo nutritivo com aquecimento capilar e brilho instantâneo. Sela cutículas e protege do frio.',
+        price: 44.90,
+        image: '/products/inverno-produtos/inverno-oleo.png',
         stock: 100,
         season: 'inverno',
         category: 'produto',
       },
-
-       // ===== INVERNO | KITS =====
- {
-        name: 'Winter Hydration Essential Kit ',
-        description:
-          'O combo ideal para manter os fios protegidos, hidratados e nutridos durante o inverno.   ',
-        price:129.90    ,
-        image: '/products/inverno-produtos/inverno-kit1.png',
-        stock: 100,
-        season: 'inverno',
-        category: 'kit',
-      },
-
+      // ===== INVERNO | KITS =====
       {
-        name: 'Winter Deep Care Kit ',
-        description:
-          'Tratamento completo com hidratação profunda e proteção contra o frio e o ar seco.    ',
-        price:199.90     ,
-        image: '/products/inverno-produtos/inverno-kit2.png ',
+        name: 'Winter Hydration Essential Kit',
+        description: 'O combo ideal para manter os fios protegidos, hidratados e nutridos durante o inverno.',
+        price: 129.90,
+        image: '/products/inverno-produtos/inverno-kit-1.png',
         stock: 100,
         season: 'inverno',
         category: 'kit',
       },
-
       {
-        name: 'Winter Curl Definition Duo ',
-        description:
-          'A dupla perfeita para definição duradoura e proteção térmica no inverno.   ',
-        price:89.90     ,
-        image: '/products/inverno-produtos/inverno-kit3.png',
+        name: 'Winter Deep Care Kit',
+        description: 'Tratamento completo com hidratação profunda e proteção contra o frio e o ar seco.',
+        price: 199.90,
+        image: '/products/inverno-produtos/inverno-kit-2.png',
         stock: 100,
         season: 'inverno',
         category: 'kit',
       },
-
-
       {
-        name: 'Winter Curl Definition Trio ',
-        description:
-          'O trio indispensável para finalizar e proteger os fios durante o inverno.   ',
-        price:129.90     ,
-        image: '/products/inverno-produtos/inverno-kit4.png',
+        name: 'Winter Curl Definition Duo',
+        description: 'A dupla perfeita para definição duradoura e proteção térmica no inverno.',
+        price: 89.90,
+        image: '/products/inverno-produtos/inverno-kit-3.png',
         stock: 100,
         season: 'inverno',
         category: 'kit',
       },
-
-
+      {
+        name: 'Winter Curl Definition Trio',
+        description: 'O trio indispensável para finalizar e proteger os fios durante o inverno.',
+        price: 129.90,
+        image: '/products/inverno-produtos/inverno-kit-4.png',
+        stock: 100,
+        season: 'inverno',
+        category: 'kit',
+      },
       {
         name: 'Winter Shine Repair Kit',
-        description:
-          'A combinação ideal para modelar e nutrir os fios no inverno.',
-        price:84.90     ,
-        image: '/products/inverno-produtos/inverno-kit5.png',
+        description: 'A combinação ideal para modelar e nutrir os fios no inverno.',
+        price: 84.90,
+        image: '/products/inverno-produtos/inverno-kit-5.png',
         stock: 100,
         season: 'inverno',
         category: 'kit',
       },
-
-
       {
-        name: 'Winter Ultimate Care Kit ',
-        description:
-          'A experiência completa de cuidado e nutrição para enfrentar o inverno.  ',
-        price:259.90     ,
-        image: '/products/inverno-produtos/inverno-kitcompleto.png  ',
+        name: 'Winter Ultimate Care Kit',
+        description: 'A experiência completa de cuidado e nutrição para enfrentar o inverno.',
+        price: 259.90,
+        image: '/products/inverno-produtos/inverno-kit-completo.png',
         stock: 100,
         season: 'inverno',
         category: 'kit',
       },
-
-        // ===== PRIMAVERA | PRODUTOS =====
-
-
-{
-        name: 'Bloom Shampoo  ',
-        description:
-          'Limpeza suave com extrato de flores e proteção contra umidade excessiva da primavera.  ',
-        price:42.90     ,
-        image: '/products/primavera-produtos/primaver a-shampoo.png   ',
+      // ===== PRIMAVERA | PRODUTOS =====
+      {
+        name: 'Bloom Shampoo',
+        description: 'Limpeza suave com extrato de flores e proteção contra umidade excessiva da primavera.',
+        price: 42.90,
+        image: '/products/primavera-produtos/primavera-shampoo.png',
         stock: 100,
         season: 'primavera',
         category: 'produto',
       },
-
       {
-        name: 'Bloom Conditioner  ',
-        description:
-          'Restaura a maciez e o brilho dos fios com fragrância floral suave e duradoura ',
-        price:45.90     ,
+        name: 'Bloom Conditioner',
+        description: 'Restaura a maciez e o brilho dos fios com fragrância floral suave e duradoura.',
+        price: 45.90,
         image: '/products/primavera-produtos/primavera-condicionador.png',
         stock: 100,
         season: 'primavera',
         category: 'produto',
       },
-
-
       {
-        name: 'Bloom Repair Mask  ',
-        description:
-          'Tratamento botânico intensivo para revitalizar fios ressecados pelo inverno com nutrição floral. ',
-        price:56.90     ,
-        image: '/products/primavera-produtos/primavera-mascara.png   ',
+        name: 'Bloom Repair Mask',
+        description: 'Tratamento botânico intensivo para revitalizar fios ressecados pelo inverno com nutrição floral.',
+        price: 56.90,
+        image: '/products/primavera-produtos/primavera-mascara.png',
         stock: 100,
         season: 'primavera',
         category: 'produto',
       },
-
-
       {
-        name: 'Floral Bloom Leave-In   ',
-        description:
-          'Forma um véu protetor leve com essências florais, controlando o frizz e devolvendo a definição.  .  ',
-        price:49.90     ,
-        image: '/products/primavera-produtos/primavera-creme.png   ',
+        name: 'Floral Bloom Leave-In',
+        description: 'Forma um véu protetor leve com essências florais, controlando o frizz e devolvendo a definição.',
+        price: 49.90,
+        image: '/products/primavera-produtos/primavera-creme.png',
         stock: 100,
         season: 'primavera',
         category: 'produto',
       },
-
-
       {
-        name: 'Bloom Definition Jelly   ',
-        description:
-          'Definição duradoura com fixação leve e perfume floral que dura o dia todo. ',
-        price:48.90     ,
-        image: '/products/primavera-produtos/primavera-gelatina.png    ',
+        name: 'Bloom Definition Jelly',
+        description: 'Definição duradoura com fixação leve e perfume floral que dura o dia todo.',
+        price: 48.90,
+        image: '/products/primavera-produtos/primavera-gelatina.png',
         stock: 100,
         season: 'primavera',
         category: 'produto',
       },
-
-
       {
-        name: 'Bloom Hair Oil   ',
-        description:
-          'Óleo floral ultraleve com brilho instantâneo. Sela as pontas, controla o frizz e realça os cachos.  ',
-        price:41.90     ,
-        image: '/products/primavera-produtos/primavera-oleo.png   ',
+        name: 'Bloom Hair Oil',
+        description: 'Óleo floral ultraleve com brilho instantâneo. Sela as pontas, controla o frizz e realça os cachos.',
+        price: 41.90,
+        image: '/products/primavera-produtos/primavera-oleo.png',
         stock: 100,
         season: 'primavera',
         category: 'produto',
       },
-
-
-
-
-        // ===== PRIMAVERA | KITS =====
- 
-{
-        name: 'Spring Essential Kit    ',
-        description:
-          'O combo ideal para renovar os fios na primavera, com limpeza, condicionam ento e tratamento floral.  ',
-        price:129.90     ,
-        image: '//products/primavera-produtos/primavera-kit-1.png    ',
+      // ===== PRIMAVERA | KITS =====
+      {
+        name: 'Spring Essential Kit',
+        description: 'O combo ideal para renovar os fios na primavera, com limpeza, condicionamento e tratamento floral.',
+        price: 129.90,
+        image: '/products/primavera-produtos/primavera-kit-1.png',
         stock: 100,
         season: 'primavera',
         category: 'kit',
       },
-
-      
-
       {
-        name: 'Spring Full Bloom ',
-        description:
-          'Tratamento completo com proteção botânica e hidratação profunda para os dias de renovação.  ',
-        price:189.90      ,
-        image: '/products/primavera-produtos/primaver a-kit-2.png',
+        name: 'Spring Full Bloom',
+        description: 'Tratamento completo com proteção botânica e hidratação profunda para os dias de renovação.',
+        price: 189.90,
+        image: '/products/primavera-produtos/primavera-kit-2.png',
         stock: 100,
         season: 'primavera',
         category: 'kit',
       },
-
       {
-        name: 'Spring Definition Duo    ',
-        description:
-          'A dupla perfeita para definição duradoura e controle do frizz nos dias de primavera.  ',
-        price:89.90    ,
-        image: '/products/primavera-produtos/primavera-kit-3.png  ',
+        name: 'Spring Definition Duo',
+        description: 'A dupla perfeita para definição duradoura e controle do frizz nos dias de primavera.',
+        price: 89.90,
+        image: '/products/primavera-produtos/primavera-kit-3.png',
         stock: 100,
         season: 'primavera',
         category: 'kit',
       },
-
       {
-        name: 'Spring Finishing Trio    ',
-        description:
-          'O trio indispensável para finalizar os fios com toque floral e brilho na primavera.  ',
-        price:109.90      ,
+        name: 'Spring Finishing Trio',
+        description: 'O trio indispensável para finalizar os fios com toque floral e brilho na primavera.',
+        price: 109.90,
         image: '/products/primavera-produtos/primavera-kit-4.png',
         stock: 100,
         season: 'primavera',
         category: 'kit',
       },
-
       {
-        name: 'Spring Styling Duo    ',
-        description:
-          'A combinação ideal para modelar e nutrir os fios com fragrância floral na primavera ',
-        price:69.90    ,
-        image: '/products/primavera-produtos/primavera-kit-5.png    ',
+        name: 'Spring Styling Duo',
+        description: 'A combinação ideal para modelar e nutrir os fios com fragrância floral na primavera.',
+        price: 69.90,
+        image: '/products/primavera-produtos/primavera-kit-5.png',
         stock: 100,
         season: 'primavera',
         category: 'kit',
       },
-
       {
-        name: 'Spring Total Bloom  ',
-        description:
-          'A experiência completa de florescimento para os seus fios na nova estação ',
-        price:249.90     ,
-        image: '/products/primavera-produtos/primavera-kit-completo.png   ',
+        name: 'Spring Total Bloom',
+        description: 'A experiência completa de florescimento para os seus fios na nova estação.',
+        price: 249.90,
+        image: '/products/primavera-produtos/primavera-kit-completo.png',
         stock: 100,
         season: 'primavera',
         category: 'kit',
       },
-
-
-      
     ],
   });
 
-
-
-  console.log('Produtos cadastrados com sucesso!');
+  console.log('✅ Produtos cadastrados com sucesso!');
 }
 
 main()
