@@ -7,6 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model user {
+  id       Int      @id @default(autoincrement())
+  name     String
+  email    String   @unique(map: "User_email_key")
+  password String
+  cidade   String?
+  telefone String?
+  foto     String?
+  role     String   @default("user")
+
+  cart     Cart?
+}
+
 model product {
   id          Int      @id @default(autoincrement())
   name        String
@@ -17,15 +30,29 @@ model product {
   createdAt   DateTime @default(now())
   category    String
   season      String
+
+  cartItems   CartItem[]
 }
 
-model user {
-  id       Int     @id @default(autoincrement())
-  name     String
-  email    String  @unique(map: "User_email_key")
-  password String
-  cidade   String?
-  telefone String?
-  foto     String?
-  role     String  @default("user")
+model Cart {
+  id        Int        @id @default(autoincrement())
+  userId    Int        @unique
+  user      user       @relation(fields: [userId], references: [id])
+
+  items     CartItem[]
+
+  createdAt DateTime   @default(now())
+}
+
+model CartItem {
+  id        Int      @id @default(autoincrement())
+  quantity  Int
+
+  cartId    Int
+  cart      Cart     @relation(fields: [cartId], references: [id])
+
+  productId Int
+  product   product  @relation(fields: [productId], references: [id])
+
+  createdAt DateTime @default(now())
 }
