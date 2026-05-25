@@ -10,6 +10,7 @@ import { ProductModule } from './product/product.module';
 import { CartModule } from './cart/cart.module';
 import { CartService } from './cart/cart.service';
 import { CartController } from './cart/cart.controller';
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { CartController } from './cart/cart.controller';
     AuthModule,
     ProductModule,
     CartModule,
+    OrderModule,
   ],
   controllers: [AppController, CartController],
   providers: [AppService, PrismaService, CartService],
