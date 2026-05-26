@@ -1,7 +1,9 @@
 import {
   Injectable,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
+
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -82,6 +84,48 @@ export class OrderService {
     return order;
   }
 
+  async createDirectOrder(
+    userId: number,
+    productId: number,
+    quantity: number,
+  ) {
+    const product =
+      await this.prisma.product.findUnique({
+        where: {
+          id: productId,
+        },
+      });
+
+    if (!product) {
+      throw new BadRequestException(
+        'Produto não encontrado',
+      );
+    }
+
+    const total =
+      product.price * quantity;
+
+    return this.prisma.order.create({
+      data: {
+        userId,
+        total,
+        items: {
+          create: [
+            {
+              productId,
+              quantity,
+              price:
+                product.price,
+            },
+          ],
+        },
+      },
+      include: {
+        items: true,
+      },
+    });
+  }
+
   async getAllOrders() {
     return this.prisma.order.findMany({
       include: {
@@ -94,19 +138,40 @@ export class OrderService {
     });
   }
 
-  async getOrder(id: number) {
-    return this.prisma.order.findUnique({
-      where: {
-        id,
-      },
-      include: {
-        items: {
-          include: {
-            product: true,
+  async getOrder(
+    id: number,
+    user: any,
+  ) {
+    const order =
+      await this.prisma.order.findUnique({
+        where: {
+          id,
+        },
+        include: {
+          items: {
+            include: {
+              product: true,
+            },
           },
         },
-      },
-    });
+      });
+
+    if (!order) {
+      throw new BadRequestException(
+        'Pedido não encontrado',
+      );
+    }
+
+    if (
+      user.role !== 'admin' &&
+      order.userId !== user.id
+    ) {
+      throw new ForbiddenException(
+        'Você não pode ver esse pedido',
+      );
+    }
+
+    return order;
   }
 
   async updateStatus(

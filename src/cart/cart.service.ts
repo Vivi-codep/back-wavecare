@@ -1,20 +1,27 @@
 import {
   Injectable,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
+
 import { PrismaService } from '../prisma/prisma.service';
 import { AddCartItemDto } from './dto/add-cart-item.dto';
 
 @Injectable()
 export class CartService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+  ) {}
 
-  async addItem(data: AddCartItemDto) {
-    const product = await this.prisma.product.findUnique({
-      where: {
-        id: data.productId,
-      },
-    });
+  async addItem(
+    data: AddCartItemDto,
+  ) {
+    const product =
+      await this.prisma.product.findUnique({
+        where: {
+          id: data.productId,
+        },
+      });
 
     if (!product) {
       throw new BadRequestException(
@@ -22,25 +29,28 @@ export class CartService {
       );
     }
 
-    let cart = await this.prisma.cart.findUnique({
-      where: {
-        userId: data.userId,
-      },
-    });
-
-    if (!cart) {
-      cart = await this.prisma.cart.create({
-        data: {
+    let cart =
+      await this.prisma.cart.findUnique({
+        where: {
           userId: data.userId,
         },
       });
+
+    if (!cart) {
+      cart =
+        await this.prisma.cart.create({
+          data: {
+            userId: data.userId,
+          },
+        });
     }
 
     const existingItem =
       await this.prisma.cartItem.findFirst({
         where: {
           cartId: cart.id,
-          productId: data.productId,
+          productId:
+            data.productId,
         },
       });
 
@@ -51,7 +61,8 @@ export class CartService {
         },
         data: {
           quantity:
-            existingItem.quantity + data.quantity,
+            existingItem.quantity +
+            data.quantity,
         },
       });
     }
@@ -60,12 +71,15 @@ export class CartService {
       data: {
         quantity: data.quantity,
         cartId: cart.id,
-        productId: data.productId,
+        productId:
+          data.productId,
       },
     });
   }
 
-  async getCart(userId: number) {
+  async getCart(
+    userId: number,
+  ) {
     return this.prisma.cart.findUnique({
       where: {
         userId,
@@ -83,17 +97,31 @@ export class CartService {
   async updateQuantity(
     id: number,
     quantity: number,
+    user: any,
   ) {
     const item =
       await this.prisma.cartItem.findUnique({
         where: {
           id,
         },
+        include: {
+          cart: true,
+        },
       });
 
     if (!item) {
       throw new BadRequestException(
         'Item não encontrado',
+      );
+    }
+
+    if (
+      user.role !== 'admin' &&
+      item.cart.userId !==
+        user.id
+    ) {
+      throw new ForbiddenException(
+        'Você não pode editar outro carrinho',
       );
     }
 
@@ -107,17 +135,33 @@ export class CartService {
     });
   }
 
-  async removeItem(id: number) {
+  async removeItem(
+    id: number,
+    user: any,
+  ) {
     const item =
       await this.prisma.cartItem.findUnique({
         where: {
           id,
+        },
+        include: {
+          cart: true,
         },
       });
 
     if (!item) {
       throw new BadRequestException(
         'Item não encontrado',
+      );
+    }
+
+    if (
+      user.role !== 'admin' &&
+      item.cart.userId !==
+        user.id
+    ) {
+      throw new ForbiddenException(
+        'Você não pode deletar item de outro carrinho',
       );
     }
 
@@ -128,12 +172,15 @@ export class CartService {
     });
   }
 
-  async clearCart(userId: number) {
-    const cart = await this.prisma.cart.findUnique({
-      where: {
-        userId,
-      },
-    });
+  async clearCart(
+    userId: number,
+  ) {
+    const cart =
+      await this.prisma.cart.findUnique({
+        where: {
+          userId,
+        },
+      });
 
     if (!cart) {
       throw new BadRequestException(
