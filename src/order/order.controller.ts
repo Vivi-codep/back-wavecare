@@ -46,27 +46,32 @@ export class OrderController {
   ) {
     const user = req.user as any;
 
-    if (
-      user.role !== 'admin' &&
-      user.id !== Number(userId)
-    ) {
-      throw new ForbiddenException(
-        'Você não pode criar pedido para outro usuário',
-      );
+    if (user.role !== 'admin' && user.id !== Number(userId)) {
+      throw new ForbiddenException('Você não pode criar pedido para outro usuário');
     }
 
-    return this.orderService.createOrder(
-      Number(userId),
-    );
+    return this.orderService.createOrder(Number(userId));
   }
 
-  @UseGuards(
-    JwtAuthGuard,
-    AdminGuard,
-  )
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @Get()
   getAllOrders() {
     return this.orderService.getAllOrders();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('user/:userId')
+  getUserOrders(
+    @Param('userId') userId: string,
+    @Req() req: Request,
+  ) {
+    const user = req.user as any;
+
+    if (user.role !== 'admin' && user.id !== Number(userId)) {
+      throw new ForbiddenException('Acesso negado');
+    }
+
+    return this.orderService.getUserOrders(Number(userId));
   }
 
   @UseGuards(JwtAuthGuard)
@@ -75,37 +80,21 @@ export class OrderController {
     @Param('id') id: string,
     @Req() req: Request,
   ) {
-    return this.orderService.getOrder(
-      Number(id),
-      req.user as any,
-    );
+    return this.orderService.getOrder(Number(id), req.user as any);
   }
 
-  @UseGuards(
-    JwtAuthGuard,
-    AdminGuard,
-  )
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @Put(':id')
   updateStatus(
     @Param('id') id: string,
     @Body('status') status: string,
   ) {
-    return this.orderService.updateStatus(
-      Number(id),
-      status,
-    );
+    return this.orderService.updateStatus(Number(id), status);
   }
 
-  @UseGuards(
-    JwtAuthGuard,
-    AdminGuard,
-  )
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @Delete(':id')
-  deleteOrder(
-    @Param('id') id: string,
-  ) {
-    return this.orderService.deleteOrder(
-      Number(id),
-    );
+  deleteOrder(@Param('id') id: string) {
+    return this.orderService.deleteOrder(Number(id));
   }
 }

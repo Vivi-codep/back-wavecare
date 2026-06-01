@@ -15,71 +15,40 @@ export class OrderService {
   async createOrder(userId: number) {
     const cart =
       await this.prisma.cart.findUnique({
-        where: {
-          userId,
-        },
+        where: { userId },
         include: {
-          items: {
-            include: {
-              product: true,
-            },
-          },
+          items: { include: { product: true } },
         },
       });
 
-    if (
-      !cart ||
-      cart.items.length === 0
-    ) {
-      throw new BadRequestException(
-        'Carrinho vazio',
-      );
+    if (!cart || cart.items.length === 0) {
+      throw new BadRequestException('Carrinho vazio');
     }
 
     const total = cart.items.reduce(
-      (sum, item) =>
-        sum +
-        item.quantity *
-          item.product.price,
+      (sum, item) => sum + item.quantity * item.product.price,
       0,
     );
 
-    const order =
-      await this.prisma.order.create({
-        data: {
-          userId,
-          total,
-          items: {
-            create:
-              cart.items.map(
-                (item) => ({
-                  productId:
-                    item.productId,
-                  quantity:
-                    item.quantity,
-                  price:
-                    item.product
-                      .price,
-                }),
-              ),
-          },
+    const order = await this.prisma.order.create({
+      data: {
+        userId,
+        total,
+        items: {
+          create: cart.items.map((item) => ({
+            productId: item.productId,
+            quantity:  item.quantity,
+            price:     item.product.price,
+          })),
         },
-        include: {
-          items: true,
-        },
-      });
-
-    await this.prisma.cartItem.deleteMany({
-      where: {
-        cartId: cart.id,
+      },
+      include: {
+        items: { include: { product: true } }, 
       },
     });
 
-    await this.prisma.cart.delete({
-      where: {
-        id: cart.id,
-      },
-    });
+    await this.prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
+    await this.prisma.cart.delete({ where: { id: cart.id } });
 
     return order;
   }
@@ -89,39 +58,24 @@ export class OrderService {
     productId: number,
     quantity: number,
   ) {
-    const product =
-      await this.prisma.product.findUnique({
-        where: {
-          id: productId,
-        },
-      });
+    const product = await this.prisma.product.findUnique({
+      where: { id: productId },
+    });
 
     if (!product) {
-      throw new BadRequestException(
-        'Produto não encontrado',
-      );
+      throw new BadRequestException('Produto não encontrado');
     }
-
-    const total =
-      product.price * quantity;
 
     return this.prisma.order.create({
       data: {
         userId,
-        total,
+        total: product.price * quantity,
         items: {
-          create: [
-            {
-              productId,
-              quantity,
-              price:
-                product.price,
-            },
-          ],
+          create: [{ productId, quantity, price: product.price }],
         },
       },
       include: {
-        items: true,
+        items: { include: { product: true } },
       },
     });
   }
@@ -129,76 +83,50 @@ export class OrderService {
   async getAllOrders() {
     return this.prisma.order.findMany({
       include: {
-        items: {
-          include: {
-            product: true,
-          },
-        },
+        items: { include: { product: true } },
       },
     });
   }
 
-  async getOrder(
-    id: number,
-    user: any,
-  ) {
-    const order =
-      await this.prisma.order.findUnique({
-        where: {
-          id,
-        },
-        include: {
-          items: {
-            include: {
-              product: true,
-            },
-          },
-        },
-      });
+  async getOrder(id: number, user: any) {
+    const order = await this.prisma.order.findUnique({
+      where: { id },
+      include: {
+        items: { include: { product: true } },
+      },
+    });
 
     if (!order) {
-      throw new BadRequestException(
-        'Pedido não encontrado',
-      );
+      throw new BadRequestException('Pedido não encontrado');
     }
 
-    if (
-      user.role !== 'admin' &&
-      order.userId !== user.id
-    ) {
-      throw new ForbiddenException(
-        'Você não pode ver esse pedido',
-      );
+    if (user.role !== 'admin' && order.userId !== user.id) {
+      throw new ForbiddenException('Você não pode ver esse pedido');
     }
 
     return order;
   }
 
-  async updateStatus(
-    id: number,
-    status: string,
-  ) {
+  async updateStatus(id: number, status: string) {
     return this.prisma.order.update({
-      where: {
-        id,
-      },
-      data: {
-        status,
-      },
+      where: { id },
+      data: { status },
     });
   }
 
   async deleteOrder(id: number) {
-    await this.prisma.orderItem.deleteMany({
-      where: {
-        orderId: id,
-      },
-    });
+    await this.prisma.orderItem.deleteMany({ where: { orderId: id } });
+    return this.prisma.order.delete({ where: { id } });
+  }
 
-    return this.prisma.order.delete({
-      where: {
-        id,
+  // ↓ NOVO
+  async getUserOrders(userId: number) {
+    return this.prisma.order.findMany({
+      where: { userId },
+      include: {
+        items: { include: { product: true } },
       },
+      orderBy: { createdAt: 'desc' },
     });
   }
 }
