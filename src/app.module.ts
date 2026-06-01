@@ -1,4 +1,9 @@
-import { Module } from '@nestjs/common';
+import {
+  Module,
+  MiddlewareConsumer,
+  NestModule,
+} from '@nestjs/common';
+
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 
@@ -11,24 +16,44 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ProductModule } from './product/product.module';
 import { CartModule } from './cart/cart.module';
-import { CartService } from './cart/cart.service';
-import { CartController } from './cart/cart.controller';
 import { OrderModule } from './order/order.module';
+
+import { LoggerMiddleware } from './logger/logger.middleware';
 
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'public'),
+      rootPath: join(
+        __dirname,
+        '..',
+        'public',
+      ),
       serveRoot: '/',
       exclude: ['/api/(.*)'],
     }),
+
     UserModule,
     AuthModule,
     ProductModule,
     CartModule,
     OrderModule,
   ],
-  controllers: [AppController, CartController],
-  providers: [AppService, PrismaService, CartService],
+
+  controllers: [AppController],
+
+  providers: [
+    AppService,
+    PrismaService,
+  ],
 })
-export class AppModule {}
+export class AppModule
+  implements NestModule
+{
+  configure(
+    consumer: MiddlewareConsumer,
+  ) {
+    consumer
+      .apply(LoggerMiddleware)
+      .forRoutes('*');
+  }
+}
