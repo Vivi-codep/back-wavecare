@@ -19,6 +19,7 @@ import { CartModule } from './cart/cart.module';
 import { OrderModule } from './order/order.module';
 
 import { LoggerMiddleware } from './logger/logger.middleware';
+import { QuizModule } from './quiz/quiz.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { LoggerMiddleware } from './logger/logger.middleware';
     ProductModule,
     CartModule,
     OrderModule,
+    QuizModule,
   ],
 
   controllers: [AppController],
