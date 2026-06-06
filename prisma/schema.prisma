@@ -17,8 +17,9 @@ model user {
   foto     String?
   role     String  @default("user")
 
-  cart   Cart?
-  orders Order[]
+  cart        Cart?
+  orders      Order[]
+  quizResults QuizResult[]
 }
 
 model product {
@@ -37,50 +38,68 @@ model product {
 }
 
 model Cart {
-  id     Int  @id @default(autoincrement())
-  userId Int  @unique
-  user   user @relation(fields: [userId], references: [id])
+  id        Int        @id @default(autoincrement())
+  userId    Int        @unique
+  user      user       @relation(fields: [userId], references: [id])
+  items     CartItem[]
+  createdAt DateTime   @default(now())
 
-  items CartItem[]
-
-  createdAt DateTime @default(now())
+  @@map("cart")
 }
 
 model CartItem {
-  id       Int @id @default(autoincrement())
-  quantity Int
-
-  cartId Int
-  cart   Cart @relation(fields: [cartId], references: [id])
-
+  id        Int      @id @default(autoincrement())
+  quantity  Int
+  cartId    Int
+  cart      Cart     @relation(fields: [cartId], references: [id])
   productId Int
-  product   product @relation(fields: [productId], references: [id])
-
+  product   product  @relation(fields: [productId], references: [id])
   createdAt DateTime @default(now())
+
+  @@map("cartitem")
 }
 
 model Order {
-  id     Int  @id @default(autoincrement())
-  userId Int
-  user   user @relation(fields: [userId], references: [id])
+  id        Int         @id @default(autoincrement())
+  userId    Int
+  user      user        @relation(fields: [userId], references: [id])
+  total     Float
+  status    String      @default("pending")
+  items     OrderItem[]
+  createdAt DateTime    @default(now())
 
-  total  Float
-  status String @default("pending")
-
-  items OrderItem[]
-
-  createdAt DateTime @default(now())
+  @@map("order")
 }
 
 model OrderItem {
-  id Int @id @default(autoincrement())
-
-  orderId Int
-  order   Order @relation(fields: [orderId], references: [id])
-
+  id        Int     @id @default(autoincrement())
+  orderId   Int
+  order     Order   @relation(fields: [orderId], references: [id])
   productId Int
   product   product @relation(fields: [productId], references: [id])
+  quantity  Int
+  price     Float
 
-  quantity Int
-  price    Float
+  @@map("orderitem")
+}
+
+model QuizResult {
+  id              Int      @id @default(autoincrement())
+  userId          Int?
+  city            String   @db.VarChar(50)
+  hairType        String   @db.VarChar(50)
+  beachFrequency  String   @db.VarChar(50)
+  sunProtection   String   @db.VarChar(50)
+  wetHair         String   @db.VarChar(50)
+  hairState       String   @db.VarChar(50)
+  chemicalProcess String   @db.VarChar(50)
+  season          String   @db.VarChar(20)
+  diagnosis       String   @db.VarChar(50)
+  recommendedKit  String   @db.VarChar(100)
+  scores          Json
+  createdAt       DateTime @default(now())
+
+  user user? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("quiz_results")
 }
