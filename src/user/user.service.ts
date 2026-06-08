@@ -71,6 +71,21 @@ export class UserService {
     });
   }
 
+    async findOne(id: number) {
+    return this.prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        telefone: true,
+        cidade: true,
+        foto: true,
+        role: true,
+      },
+    });
+  }
+
   // 🔹 ATUALIZAR USUÁRIO
   async update(id: number, data: UpdateUserDto) {
     return this.prisma.user.update({

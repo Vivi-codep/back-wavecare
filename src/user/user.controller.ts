@@ -28,136 +28,91 @@ import { AdminGuard } from '../auth/guards/admin.guard';
 
 @Controller('users')
 export class UserController {
-  constructor(
-    private userService: UserService,
-  ) {}
+  constructor(private userService: UserService) {}
 
   // CADASTRO
   @Post('register')
-  create(
-    @Body() body: CreateUserDto,
-  ) {
+  create(@Body() body: CreateUserDto) {
     return this.userService.create(body);
   }
 
   // LOGIN
   @Post('login')
-  login(
-    @Body() body: LoginUserDto,
-  ) {
+  login(@Body() body: LoginUserDto) {
     return this.userService.login(body);
   }
 
   // LISTAR USUÁRIOS (SÓ ADMIN)
-  @UseGuards(
-    JwtAuthGuard,
-    AdminGuard,
-  )
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @Get()
   findAll() {
     return this.userService.findAll();
+  }
+
+  // BUSCAR PRÓPRIO USUÁRIO
+  @UseGuards(JwtAuthGuard)
+  @Get(':id')
+  findOne(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
+    const user = req.user as any;
+    if (user.id !== id) {
+      throw new ForbiddenException('Acesso negado');
+    }
+    return this.userService.findOne(id);
   }
 
   // ATUALIZAR PRÓPRIO USUÁRIO
   @UseGuards(JwtAuthGuard)
   @Put(':id')
   update(
-    @Param('id', ParseIntPipe)
-    id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Req() req: Request,
-    @Body()
-    body: UpdateUserDto,
+    @Body() body: UpdateUserDto,
   ) {
     const user = req.user as any;
-
     if (user.id !== id) {
-      throw new ForbiddenException(
-        'Você não pode editar outra conta',
-      );
+      throw new ForbiddenException('Você não pode editar outra conta');
     }
-
-    return this.userService.update(
-      id,
-      body,
-    );
+    return this.userService.update(id, body);
   }
 
   // DELETAR PRÓPRIO USUÁRIO
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(
-    @Param('id', ParseIntPipe)
-    id: number,
-    @Req() req: Request,
-  ) {
+  remove(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
     const user = req.user as any;
-
     if (user.id !== id) {
-      throw new ForbiddenException(
-        'Você não pode deletar outra conta',
-      );
+      throw new ForbiddenException('Você não pode deletar outra conta');
     }
-
-    return this.userService.remove(
-      id,
-    );
+    return this.userService.remove(id);
   }
 
   // ALTERAR PRÓPRIA FOTO
   @UseGuards(JwtAuthGuard)
   @Put('upload/:id')
-  @UseInterceptors(
-    FileInterceptor('file', {
-      dest: './uploads',
-    }),
-  )
+  @UseInterceptors(FileInterceptor('file', { dest: './uploads' }))
   uploadFoto(
-    @Param('id', ParseIntPipe)
-    id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Req() req: Request,
-    @UploadedFile()
-    file: Express.Multer.File,
+    @UploadedFile() file: Express.Multer.File,
   ) {
     const user = req.user as any;
-
     if (user.id !== id) {
-      throw new ForbiddenException(
-        'Você não pode alterar a foto de outra conta',
-      );
+      throw new ForbiddenException('Você não pode alterar a foto de outra conta');
     }
-
     if (!file) {
-      throw new BadRequestException(
-        'Arquivo não enviado',
-      );
+      throw new BadRequestException('Arquivo não enviado');
     }
-
-    return this.userService.update(
-      id,
-      {
-        foto: `/uploads/${file.filename}`,
-      },
-    );
+    return this.userService.update(id, { foto: `/uploads/${file.filename}` });
   }
 
   // DELETAR PRÓPRIA FOTO
   @UseGuards(JwtAuthGuard)
   @Delete('foto/:id')
-  deleteFoto(
-    @Param('id', ParseIntPipe)
-    id: number,
-    @Req() req: Request,
-  ) {
+  deleteFoto(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
     const user = req.user as any;
-
     if (user.id !== id) {
-      throw new ForbiddenException(
-        'Você não pode deletar a foto de outra conta',
-      );
+      throw new ForbiddenException('Você não pode deletar a foto de outra conta');
     }
-
-    return this.userService.deleteFoto(
-      id,
-    );
+    return this.userService.deleteFoto(id);
   }
 }
