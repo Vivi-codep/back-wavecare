@@ -103,28 +103,44 @@ export class UserService {
     });
   }
 
-  // 🔹 DELETAR USUÁRIO
-  async remove(id: number) {
-    const user = await this.prisma.user.delete({
-      where: { id },
-    });
+async remove(id: number) {
+  await this.prisma.cartItem.deleteMany({
+    where: { cart: { userId: id } },
+  });
+  await this.prisma.cart.deleteMany({
+    where: { userId: id },
+  });
+  await this.prisma.orderItem.deleteMany({
+    where: { order: { userId: id } },
+  });
+  await this.prisma.order.deleteMany({
+    where: { userId: id },
+  });
+  await this.prisma.quizResult.deleteMany({
+    where: { userId: id },
+  });
 
-    return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      telefone: user.telefone,
-      cidade: user.cidade,
-      foto: user.foto,
-      role: user.role,
-    };
-  }
+  const user = await this.prisma.user.delete({
+    where: { id },
+  });
+
+  return user;
+};
 
   // 🔹 DELETAR FOTO
   async deleteFoto(id: number) {
     const user = await this.prisma.user.findUnique({
       where: { id },
     });
+
+    const refs = await this.prisma.$queryRaw`
+    SELECT TABLE_NAME, CONSTRAINT_NAME 
+    FROM information_schema.KEY_COLUMN_USAGE 
+    WHERE COLUMN_NAME = 'userId' 
+    AND REFERENCED_TABLE_NAME = 'user'
+    AND TABLE_SCHEMA = DATABASE()
+  `;
+  console.log('TABELAS COM userId:', JSON.stringify(refs));
 
     if (!user || !user.foto) {
       throw new BadRequestException('Usuário não tem foto');
