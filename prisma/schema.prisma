@@ -1,3 +1,4 @@
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -5,6 +6,26 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+enum OrderStatus {
+  pending
+  confirmed
+  canceled
+  shipped
+  delivered
+}
+
+enum PaymentStatus {
+  pending
+  paid
+  failed
+}
+
+enum PaymentMethod {
+  pix
+  card
+  boleto
 }
 
 model user {
@@ -38,11 +59,11 @@ model product {
 }
 
 model Cart {
-  id        Int        @id @default(autoincrement())
-  userId    Int        @unique
-  user      user       @relation(fields: [userId], references: [id])
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  user      user     @relation(fields: [userId], references: [id])
   items     CartItem[]
-  createdAt DateTime   @default(now())
+  createdAt DateTime @default(now())
 
   @@map("cart")
 }
@@ -60,13 +81,19 @@ model CartItem {
 }
 
 model Order {
-  id        Int         @id @default(autoincrement())
-  userId    Int
-  user      user        @relation(fields: [userId], references: [id])
-  total     Float
-  status    String      @default("pending")
-  items     OrderItem[]
-  createdAt DateTime    @default(now())
+  id            Int           @id @default(autoincrement())
+  userId        Int
+  user          user          @relation(fields: [userId], references: [id])
+
+  total         Float
+
+  status        OrderStatus   @default(pending)
+  paymentMethod PaymentMethod?
+  paymentStatus PaymentStatus @default(pending)
+
+  items         OrderItem[]
+
+  createdAt     DateTime      @default(now())
 
   @@map("order")
 }

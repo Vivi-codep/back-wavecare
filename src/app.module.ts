@@ -17,20 +17,16 @@ import { AuthModule } from './auth/auth.module';
 import { ProductModule } from './product/product.module';
 import { CartModule } from './cart/cart.module';
 import { OrderModule } from './order/order.module';
+import { QuizModule } from './quiz/quiz.module';
 
 import { LoggerMiddleware } from './logger/logger.middleware';
-import { QuizModule } from './quiz/quiz.module';
 
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(
-        __dirname,
-        '..',
-        'public',
-      ),
+      rootPath: join(__dirname, '..', 'public'),
       serveRoot: '/',
-      exclude: ['/api/(.*)'],
+      exclude: ['/api'], // ✅ CORRIGIDO AQUI
     }),
 
     UserModule,
@@ -48,12 +44,8 @@ import { QuizModule } from './quiz/quiz.module';
     PrismaService,
   ],
 })
-export class AppModule
-  implements NestModule
-{
-  configure(
-    consumer: MiddlewareConsumer,
-  ) {
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(LoggerMiddleware)
       .forRoutes('*');
