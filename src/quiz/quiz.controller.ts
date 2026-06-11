@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { QuizService } from './quiz.service';
 import { QuizDto } from './dto/quiz.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -12,5 +12,12 @@ export class QuizController {
   getResult(@Body() data: QuizDto, @Req() req: any) {
     const userId: number | undefined = req.user?.id ?? req.user?.sub;
     return this.quizService.getResult(data, userId);
+  }
+
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  getMyResult(@Req() req: any) {
+    const userId: number | undefined = req.user?.id ?? req.user?.sub;
+    return this.quizService.getMyResult(userId);
   }
 }
