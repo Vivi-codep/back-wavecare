@@ -10,7 +10,7 @@ import { PrismaService } from '../prisma/prisma.service';
 export class OrderService {
   constructor(
     private prisma: PrismaService,
-  ) {}
+  ) { }
 
   async createOrder(userId: number) {
     const cart =
@@ -23,6 +23,13 @@ export class OrderService {
 
     if (!cart || cart.items.length === 0) {
       throw new BadRequestException('Carrinho vazio');
+    }
+    for (const item of cart.items) {
+      if (item.product.stock < item.quantity) {
+        throw new BadRequestException(
+          `Estoque insuficiente para ${item.product.name}`,
+        );
+      }
     }
 
     const total = cart.items.reduce(
@@ -37,16 +44,27 @@ export class OrderService {
         items: {
           create: cart.items.map((item) => ({
             productId: item.productId,
-            quantity:  item.quantity,
-            price:     item.product.price,
+            quantity: item.quantity,
+            price: item.product.price,
           })),
         },
       },
       include: {
-        items: { include: { product: true } }, 
+        items: { include: { product: true } },
       },
     });
-
+    for (const item of cart.items) {
+      await this.prisma.product.update({
+        where: {
+          id: item.productId,
+        },
+        data: {
+          stock: {
+            decrement: item.quantity,
+          },
+        },
+      });
+    }
     await this.prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
     await this.prisma.cart.delete({ where: { id: cart.id } });
 
