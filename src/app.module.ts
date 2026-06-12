@@ -23,11 +23,11 @@ import { LoggerMiddleware } from './logger/logger.middleware';
 
 @Module({
   imports: [
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'public'),
-      serveRoot: '/',
-      exclude: ['/api'], // ✅ CORRIGIDO AQUI
-    }),
+   ServeStaticModule.forRoot({
+  rootPath: join(__dirname, '..', 'public'),
+  serveRoot: '/static', // ← era '/'
+  exclude: ['/api'],
+}),
 
     UserModule,
     AuthModule,
