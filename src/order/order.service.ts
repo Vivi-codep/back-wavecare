@@ -97,19 +97,17 @@ export class OrderService {
   }
 
   // 💳 CONFIRM PAYMENT (ÚNICO LUGAR QUE PAGA)
-  async confirmPayment(id: number) {
+  async confirmPayment(id: number, paymentMethod?: PaymentMethod) {
     const order = await this.prisma.order.findUnique({
       where: { id },
       include: { items: { include: { product: true } } },
     });
 
     if (!order) throw new BadRequestException('Pedido não encontrado');
-
     if (order.paymentStatus === PaymentStatus.paid) {
       throw new BadRequestException('Pedido já pago');
     }
 
-    // valida estoque
     for (const item of order.items) {
       if (item.product.stock < item.quantity) {
         throw new BadRequestException('Estoque insuficiente');
@@ -120,9 +118,7 @@ export class OrderService {
       for (const item of order.items) {
         await tx.product.update({
           where: { id: item.productId },
-          data: {
-            stock: { decrement: item.quantity },
-          },
+          data: { stock: { decrement: item.quantity } },
         });
       }
 
@@ -131,11 +127,12 @@ export class OrderService {
         data: {
           status: OrderStatus.confirmed,
           paymentStatus: PaymentStatus.paid,
+          ...(paymentMethod ? { paymentMethod } : {}), // ← salva o método se veio
         },
+        include: { items: { include: { product: true } } }, // ← retorna items populados
       });
     });
   }
-
   getAllOrders() {
     return this.prisma.order.findMany({
       include: { items: { include: { product: true } } },

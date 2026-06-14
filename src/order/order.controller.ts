@@ -60,8 +60,11 @@ export class OrderController {
   // 💳 CONFIRM PAYMENT
   @UseGuards(JwtAuthGuard)
   @Put(':id/pay')
-  confirmPayment(@Param('id') id: string) {
-    return this.orderService.confirmPayment(Number(id));
+  confirmPayment(
+    @Param('id') id: string,
+    @Body('paymentMethod') paymentMethod: PaymentMethod,
+  ) {
+    return this.orderService.confirmPayment(Number(id), paymentMethod);
   }
 
   // 📦 ADMIN
