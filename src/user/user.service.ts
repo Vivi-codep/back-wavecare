@@ -205,4 +205,58 @@ async remove(id: number) {
       access_token,
     };
   }
+
+  // users.service.ts
+async getMyProfile(userId: number) {
+  const user = await this.prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      telefone: true,
+      cidade: true,
+      foto: true,
+      role: true,
+      quizResults: {
+        orderBy: { createdAt: 'desc' },
+        take: 1,
+        select: {
+          hairType:       true,
+          hairState:      true,
+          beachFrequency: true,
+          season:         true,
+          diagnosis:      true,
+          recommendedKit: true,
+          createdAt:      true,
+        },
+      },
+    },
+  });
+
+  if (!user) throw new BadRequestException('Usuário não encontrado');
+
+  const quiz = user.quizResults[0] ?? null;
+
+  return {
+    id:       user.id,
+    name:     user.name,
+    email:    user.email,
+    telefone: user.telefone,
+    cidade:   user.cidade,
+    foto:     user.foto,
+    role:     user.role,
+    capilar: quiz
+      ? {
+          tipo:            quiz.hairType,
+          preocupacao:     quiz.hairState,
+          frequenciaPreia: quiz.beachFrequency,
+          estacaoCritica:  quiz.season,
+          diagnosis:       quiz.diagnosis,
+          recommendedKit:  quiz.recommendedKit,
+          updatedAt:       quiz.createdAt,
+        }
+      : null,
+  };
+}
 }

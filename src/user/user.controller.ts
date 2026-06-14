@@ -115,4 +115,12 @@ export class UserController {
     }
     return this.userService.deleteFoto(id);
   }
+
+  //Quiz
+  @UseGuards(JwtAuthGuard)
+  @Get('me/profile')
+  getMyProfile(@Req() req: Request) {
+    const user = req.user as any;
+    return this.userService.getMyProfile(user.id);
+  }
 }
