@@ -72,18 +72,7 @@ export class CartController {
     );
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Delete(':id')
-  removeItem(
-    @Param('id') id: string,
-    @Req() req: Request,
-  ) {
-    return this.cartService.removeItem(
-      Number(id),
-      req.user as any,
-    );
-  }
-
+  // ✅ Rota estática ANTES da dinâmica
   @UseGuards(JwtAuthGuard)
   @Delete('clear/:userId')
   clearCart(
@@ -103,6 +92,19 @@ export class CartController {
 
     return this.cartService.clearCart(
       Number(userId),
+    );
+  }
+
+  // ✅ Rota dinâmica DEPOIS
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  removeItem(
+    @Param('id') id: string,
+    @Req() req: Request,
+  ) {
+    return this.cartService.removeItem(
+      Number(id),
+      req.user as any,
     );
   }
 }

@@ -130,4 +130,3 @@ model QuizResult {
 
   @@map("quiz_results")
 }
-
