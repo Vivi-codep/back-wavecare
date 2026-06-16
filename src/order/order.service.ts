@@ -11,6 +11,8 @@ import {
   PaymentMethod,
 } from '@prisma/client';
 
+
+
 @Injectable()
 export class OrderService {
   constructor(private prisma: PrismaService) {}
@@ -133,11 +135,18 @@ export class OrderService {
       });
     });
   }
+
   getAllOrders() {
     return this.prisma.order.findMany({
-      include: { items: { include: { product: true } } },
+      include: {
+        items: { include: { product: true } },
+        user: {
+          select: { id: true, name: true, email: true },
+        },
+      },
     });
   }
+
 
   async getOrder(id: number, user: any) {
     const order = await this.prisma.order.findUnique({
@@ -154,12 +163,20 @@ export class OrderService {
     return order;
   }
 
-  updateStatus(id: number, status: OrderStatus) {
-    return this.prisma.order.update({
-      where: { id },
-      data: { status },
-    });
+updateStatus(id: number, status: string) {
+  const validStatuses = ['pending', 'confirmed', 'shipped', 'delivered', 'canceled'];
+  if (!validStatuses.includes(status)) {
+    throw new BadRequestException('Status inválido');
   }
+  return this.prisma.order.update({
+    where: { id },
+    data: { status: status as OrderStatus },
+    include: {
+      items: { include: { product: true } },
+      user: { select: { id: true, name: true, email: true } },
+    },
+  });
+}
 
   deleteOrder(id: number) {
     return this.prisma.order.delete({

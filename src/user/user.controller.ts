@@ -97,12 +97,16 @@ export class UserController {
   ) {
     const user = req.user as any;
     if (user.id !== id) {
-      throw new ForbiddenException('Você não pode alterar a foto de outra conta');
+      throw new ForbiddenException(
+        'Você não pode alterar a foto de outra conta',
+      );
     }
     if (!file) {
       throw new BadRequestException('Arquivo não enviado');
     }
-    return this.userService.update(id, { foto: `/uploads/${file.filename}` });
+    return this.userService.update(id, {
+      foto: `/uploads/${file.filename}`,
+    });
   }
 
   // DELETAR PRÓPRIA FOTO
@@ -111,16 +115,26 @@ export class UserController {
   deleteFoto(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
     const user = req.user as any;
     if (user.id !== id) {
-      throw new ForbiddenException('Você não pode deletar a foto de outra conta');
+      throw new ForbiddenException(
+        'Você não pode deletar a foto de outra conta',
+      );
     }
     return this.userService.deleteFoto(id);
   }
 
-  //Quiz
+  // QUIZ - PERFIL DO USUÁRIO
   @UseGuards(JwtAuthGuard)
   @Get('me/profile')
   getMyProfile(@Req() req: Request) {
     const user = req.user as any;
     return this.userService.getMyProfile(user.id);
+  }
+
+
+  // DELETAR USUÁRIO COMO ADMIN
+  @UseGuards(JwtAuthGuard, AdminGuard)
+  @Delete('admin/:id')
+  async removeByAdmin(@Param('id', ParseIntPipe) id: number) {
+    return this.userService.removeByAdmin(id);
   }
 }

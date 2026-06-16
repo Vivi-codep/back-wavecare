@@ -13,10 +13,8 @@ import {
 
 import { Request } from 'express';
 import { OrderService } from './order.service';
-import {
-  OrderStatus,
-  PaymentMethod,
-} from '@prisma/client';
+import { OrderStatus, PaymentMethod } from '@prisma/client';
+
 
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AdminGuard } from '../auth/guards/admin.guard';
@@ -25,7 +23,6 @@ import { AdminGuard } from '../auth/guards/admin.guard';
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
-  // 🛒 CART ORDER
   @UseGuards(JwtAuthGuard)
   @Post()
   createOrder(
@@ -33,14 +30,9 @@ export class OrderController {
     @Body('paymentMethod') paymentMethod: PaymentMethod,
   ) {
     const user = req.user as any;
-
-    return this.orderService.createOrder(
-      user.id,
-      paymentMethod,
-    );
+    return this.orderService.createOrder(user.id, paymentMethod);
   }
 
-  // 🧾 DIRECT ORDER
   @UseGuards(JwtAuthGuard)
   @Post('direct')
   createDirectOrder(
@@ -48,7 +40,6 @@ export class OrderController {
     @Body() body: any,
   ) {
     const user = req.user as any;
-
     return this.orderService.createDirectOrder(
       user.id,
       Number(body.productId),
@@ -57,7 +48,6 @@ export class OrderController {
     );
   }
 
-  // 💳 CONFIRM PAYMENT
   @UseGuards(JwtAuthGuard)
   @Put(':id/pay')
   confirmPayment(
@@ -67,14 +57,12 @@ export class OrderController {
     return this.orderService.confirmPayment(Number(id), paymentMethod);
   }
 
-  // 📦 ADMIN
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Get()
   getAllOrders() {
     return this.orderService.getAllOrders();
   }
 
-  // 👤 USER ORDERS
   @UseGuards(JwtAuthGuard)
   @Get('user/:userId')
   getUserOrders(
@@ -82,32 +70,27 @@ export class OrderController {
     @Req() req: Request,
   ) {
     const user = req.user as any;
-
     if (user.role !== 'admin' && user.id !== Number(userId)) {
       throw new ForbiddenException('Acesso negado');
     }
-
     return this.orderService.getUserOrders(Number(userId));
   }
 
-  // 📦 ONE ORDER
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   getOrder(@Param('id') id: string, @Req() req: Request) {
     return this.orderService.getOrder(Number(id), req.user as any);
   }
 
-  // ✏️ STATUS
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Put(':id')
   updateStatus(
     @Param('id') id: string,
-    @Body('status') status: OrderStatus,
+    @Body() body: { status: string },
   ) {
-    return this.orderService.updateStatus(Number(id), status);
+    return this.orderService.updateStatus(Number(id), body.status);
   }
 
-  // 🗑️ DELETE
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Delete(':id')
   deleteOrder(@Param('id') id: string) {
