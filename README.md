@@ -86,7 +86,7 @@ npm run start:dev
 
 API disponível em:
 
-http://localhost:3001
+http://localhost:3002
 
 ---
 
