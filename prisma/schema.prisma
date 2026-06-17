@@ -41,6 +41,7 @@ model user {
   cart        Cart?
   orders      Order[]
   quizResults QuizResult[]
+  favorites  Favorite[]
 }
 
 model product {
@@ -56,6 +57,7 @@ model product {
 
   cartItems  CartItem[]
   orderItems OrderItem[]
+  favorites  Favorite[]
 }
 
 model Cart {
@@ -129,4 +131,16 @@ model QuizResult {
   user user? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@map("quiz_results")
+}
+
+model Favorite {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      user     @relation(fields: [userId], references: [id])
+  productId Int
+  product   product  @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+  @@map("favorite")
 }

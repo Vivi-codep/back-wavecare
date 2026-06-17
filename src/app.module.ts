@@ -18,6 +18,7 @@ import { ProductModule } from './product/product.module';
 import { CartModule } from './cart/cart.module';
 import { OrderModule } from './order/order.module';
 import { QuizModule } from './quiz/quiz.module';
+import { FavoritesModule } from './favorites/favorites.module';
 
 import { LoggerMiddleware } from './logger/logger.middleware';
 
@@ -35,6 +36,7 @@ import { LoggerMiddleware } from './logger/logger.middleware';
     CartModule,
     OrderModule,
     QuizModule,
+    FavoritesModule,
   ],
 
   controllers: [AppController],

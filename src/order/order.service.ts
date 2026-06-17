@@ -178,11 +178,14 @@ updateStatus(id: number, status: string) {
   });
 }
 
-  deleteOrder(id: number) {
-    return this.prisma.order.delete({
-      where: { id },
-    });
-  }
+  async deleteOrder(id: number) {
+  await this.prisma.orderItem.deleteMany({
+    where: { orderId: id },
+  });
+  return this.prisma.order.delete({
+    where: { id },
+  });
+}
 
   getUserOrders(userId: number) {
     return this.prisma.order.findMany({
